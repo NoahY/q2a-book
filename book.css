@@ -1,0 +1,37 @@
+body {
+	background-color:silver;
+}
+.page {
+	background-color:white;
+	max-width:1000px;
+	margin:auto;
+	padding:0 20px;
+}
+
+
+.toc,.question,.back { page-break-before: always; }
+
+.front,.back {padding:600px 0; margin:20px 0; text-align:center}
+.front-title {font-size:300%}
+
+.toc {margin: 20px 10px; border-top:2px solid silver;border-bottom:2px solid silver;}
+.toc-entry {}
+.toc-entry a {text-decoration:none; font-weight:bold}
+
+.cat-title {
+	font-size:200%;
+}
+
+.questions {}
+.question-title, .toc-title {font-weight:bold; font-size:150%; margin:10px 0;}
+.question-title a { color:black;}
+
+.top-link{font-size:50%; color:green !important;}
+
+.question {border-bottom:1px solid silver; margin:60px 0}
+.question-content {margin-bottom:20px;}
+
+.answers {margin-left:20px}
+.answer {border-top:1px dashed silver;margin-bottom:20px; padding:10px 0;}
+
+.back {}
