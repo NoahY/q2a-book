@@ -47,6 +47,9 @@
 						'SELECT * FROM ^categories'
 					)
 				);	
+				$navcats = array();
+				foreach($cats as $cat)
+					$navcats[$cat['categoryid']] = $cat;
 			}
 			else
 			    $cats = array(false);
@@ -84,7 +87,6 @@
 					
 					case 1:
 						$sortsql.=', ans.netvotes DESC';
-						$incsql="AND ans.netvotes IN (SELECT MAX(ans.netvotes) FROM ^posts AS qs, ^posts AS ans WHERE qs.type='Q' AND ans.type='A' AND ans.parentid=qs.postid)";
 					break;
 					
 					case 2:
@@ -95,7 +97,7 @@
 					break;
 				}
 				
-				$selectspec="SELECT qs.postid AS postid, qs.title AS title, qs.content AS content, ans.content AS acontent FROM ^posts AS qs, ^posts AS ans WHERE qs.type='Q' AND ans.type='A' AND ans.parentid=qs.postid ".($iscats?"AND qs.categoryid=".$cat['categoryid']." ":"").$incsql." ".$sortsql;
+				$selectspec="SELECT qs.postid AS postid, BINARY qs.title AS title, BINARY qs.content AS content, qs.format AS format, BINARY ans.content AS acontent, ans.format AS aformat FROM ^posts AS qs, ^posts AS ans WHERE qs.type='Q' AND ans.type='A' AND ans.parentid=qs.postid ".($iscats?"AND qs.categoryid=".$cat['categoryid']." ":"").$incsql." ".$sortsql;
 				
 				$qs = qa_db_read_all_assoc(
 					qa_db_query_sub(
@@ -113,7 +115,7 @@
 
 				
 				foreach($q2 as $qs) {
-
+					
 					// toc entry
 					
 					$toc.=str_replace('[qlink]','<a href="#question'.$q['postid'].'">'.$q['title'].'</a>',qa_opt('book_plugin_template_toc'));
@@ -122,15 +124,29 @@
 					
 					$as = '';
 					foreach($qs as $q) {
-						$as .= str_replace('[answer]',$q['acontent'],qa_opt('book_plugin_template_answer'));
+						$acontent = '';
+						if(!empty($q['acontent'])) {
+							$viewer=qa_load_viewer($q['acontent'], $q['aformat']);
+							$acontent = $viewer->get_html($q['acontent'], $q['aformat'], array());
+						}
+
+						$as .= str_replace('[answer]',$acontent,qa_opt('book_plugin_template_answer'));
+						if(qa_opt('book_plugin_inc') == 1) // best answer only
+							break;
 					}
 					
 					// question html
 					
+					$qcontent = '';
+					if(!empty($q['content'])) {
+						$viewer=qa_load_viewer($q['content'], $q['format']);
+						$qcontent = $viewer->get_html($q['content'], $q['format'], array());
+					}
+					
 					$oneq = str_replace('[question-title]',$q['title'],qa_opt('book_plugin_template_question'));
 					$oneq = str_replace('[qanchor]','question'.$q['postid'],$oneq);
 					$oneq = str_replace('[qurl]',qa_html(qa_q_request($q['postid'],$q['title'])),$oneq);
-					$oneq = str_replace('[question]',$q['content'],$oneq);
+					$oneq = str_replace('[question]',$qcontent,$oneq);
 					 // output with answers 
 					 
 					$qhtml .= str_replace('[answers]',$as,$oneq);
@@ -140,7 +156,7 @@
 
 					// todo fix category link
 					
-					$catout = str_replace('[cat-url]',qa_path_html('questions/'.qa_category_path_request($cats, $cat['categoryid'])),qa_opt('book_plugin_template_category'));
+					$catout = str_replace('[cat-url]',qa_path_html('questions/'.qa_category_path_request($navcats, $cat['categoryid'])),qa_opt('book_plugin_template_category'));
 					$catout = str_replace('[cat-anchor]','cat'.$cat['categoryid'],$catout);
 					$catout = str_replace('[cat-title]',$cat['title'],$catout);
 					$catout = str_replace('[questions]',$qhtml,$catout);
