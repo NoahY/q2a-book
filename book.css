@@ -28,7 +28,7 @@ body {
 
 .top-link{font-size:50%; color:green !important;}
 
-.question {border-bottom:1px solid silver; margin:20px 0}
+.question {border-bottom:1px solid silver; margin:20px 0 0 20px}
 .question-content {margin-bottom:20px;}
 
 .answers {margin-left:20px}

@@ -4,7 +4,7 @@
 		function option_default($option) {
 			
 			switch($option) {
-			case 'book_plugin_sort':
+			case 'book_plugin_sort_q':
 				return 0;
 			case 'book_plugin_inc':
 				return 0;
@@ -45,6 +45,7 @@
 			
 		function admin_form(&$qa_content)
 		{					   
+					qa_error_log($_POST);
 							
 			// Process form input
 				
@@ -53,7 +54,9 @@
 				if (qa_clicked('book_plugin_process')) {
 			
 					qa_opt('book_plugin_cats',(bool)qa_post_text('book_plugin_cats'));
-					qa_opt('book_plugin_sort',(int)qa_post_text('book_plugin_sort'));
+					qa_opt('book_plugin_catex',qa_post_text('book_plugin_catex'));
+					
+					qa_opt('book_plugin_sort_q',(int)qa_post_text('book_plugin_sort_q'));
 					qa_opt('book_plugin_inc',(int)qa_post_text('book_plugin_inc'));
 					qa_opt('book_plugin_include_votes',(int)qa_post_text('book_plugin_include_votes'));
 
@@ -91,27 +94,34 @@
 			
 			$fields[] = array(
 				'label' => 'Sort By Categories',
-				'tags' => 'NAME="book_plugin_cats"',
+				'tags' => 'onchange="if(this.checked) $(\'#book_plugin_cat_div\').show(); else $(\'#book_plugin_cat_div\').hide();" NAME="book_plugin_cats"',
 				'value' => qa_opt('book_plugin_cats'),
 				'type' => 'checkbox',
 			);
+
+			
+			$fields[] = array(
+				'value' => '<span style="display:'.(qa_opt('book_plugin_cats')?'block':'none').'" id="book_plugin_cat_div"><i>Categories to exclude (comma seperated categoryid list):</i><br/><input name="book_plugin_catex" id="book_plugin_catex" value="'.qa_opt('book_plugin_catex').'"></span>',
+				'type' => 'static',
+			);
 			
 			$sort = array(
-				'votes on question',
-				'votes on answer',
+				'votes',
 				'date',
 			);
 			
 			$fields[] = array(
-				'id' => 'book_plugin_sort',
+				'id' => 'book_plugin_sort_q',
 				'label' => 'Sort questions by',
-				'tags' => 'NAME="book_plugin_sort" ID="book_plugin_sort"',
+				'tags' => 'NAME="book_plugin_sort_q" ID="book_plugin_sort_q"',
 				'type' => 'select',
 				'options' => $sort,
-				'value' => @$sort[qa_opt('book_plugin_sort')],
+				'value' => @$sort[qa_opt('book_plugin_sort_q')],
 			);
 
+
 			$include = array(
+				'all questions and answers',
 				'questions with their selected answer',
 				'all answered questions + best answer',
 				'answered questions having minimum number of votes',
@@ -128,7 +138,7 @@
 			);
 
 			$fields[] = array(
-				'value' => '<div id="book_plugin_include_votes" style="display:'.(qa_opt('book_plugin_inc')>1?'block':'none').'">Minimum votes: <input size="3" name="book_plugin_include_votes" value="'.qa_opt('book_plugin_include_votes').'"></div>',
+				'value' => '<span id="book_plugin_include_votes" style="display:'.(qa_opt('book_plugin_inc')>1?'block':'none').'">Minimum votes: <input size="3" name="book_plugin_include_votes" value="'.qa_opt('book_plugin_include_votes').'"></span>',
 				'type' => 'static',
 			);
 
@@ -144,7 +154,7 @@
 				'type' => 'checkbox',
 			);
 			$fields[] = array(
-				'value' => '<div id="book_plugin_loc" style="display:'.(qa_opt('book_plugin_static')?'block':'none').'">Location (must be writable): <input name="book_plugin_loc" value="'.qa_opt('book_plugin_loc').'"></div>',
+				'value' => '<span id="book_plugin_loc" style="display:'.(qa_opt('book_plugin_static')?'block':'none').'">Location (must be writable): <input name="book_plugin_loc" value="'.qa_opt('book_plugin_loc').'"></span>',
 				'type' => 'static',
 			);
 			$fields[] = array(

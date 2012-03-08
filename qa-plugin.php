@@ -44,7 +44,7 @@
 			if($iscats) {
 			    $cats = qa_db_read_all_assoc(
 					qa_db_query_sub(
-						'SELECT * FROM ^categories'
+						'SELECT * FROM ^categories'.(qa_opt('book_plugin_catex')?' WHERE categoryid NOT IN ('.qa_opt('book_plugin_catex').')':'')
 					)
 				);	
 				$navcats = array();
@@ -65,39 +65,35 @@
 				$toc = '';
 				$qhtml = '';
 				
-				switch (qa_opt('book_plugin_sort')) {
+				switch (qa_opt('book_plugin_sort_q')) {
 					case 0:
 						$sortsql='ORDER BY qs.netvotes DESC, qs.created DESC';
 					break;
 					
 					case 1:
-						$sortsql='ORDER BY ans.netvotes DESC, ans.created DESC';
-					break;
-
-					case 2:
 						$sortsql='ORDER BY qs.created ASC';
 					break;
 					
 				}
 
 				switch (qa_opt('book_plugin_inc')) {
-					case 0:
+					case 1:
 						$incsql='AND qs.selchildid=ans.postid';
 					break;
 					
-					case 1:
+					case 2:
 						$sortsql.=', ans.netvotes DESC';
 					break;
 					
-					case 2:
+					case 3:
 						$incsql='AND qs.netvotes >= '.(int)qa_opt('book_plugin_include_votes');
 					break;
-					case 3:
+					case 4:
 						$incsql='AND ans.netvotes >= '.(int)qa_opt('book_plugin_include_votes');
 					break;
 				}
 				
-				$selectspec="SELECT qs.postid AS postid, BINARY qs.title AS title, BINARY qs.content AS content, qs.format AS format, BINARY ans.content AS acontent, ans.format AS aformat FROM ^posts AS qs, ^posts AS ans WHERE qs.type='Q' AND ans.type='A' AND ans.parentid=qs.postid ".($iscats?"AND qs.categoryid=".$cat['categoryid']." ":"").$incsql." ".$sortsql;
+				$selectspec="SELECT qs.postid AS postid, BINARY qs.title AS title, BINARY qs.content AS content, qs.format AS format, BINARY ans.content AS acontent, ans.format AS aformat, ans.userid AS auserid FROM ^posts AS qs, ^posts AS ans WHERE qs.type='Q' AND ans.type='A' AND ans.parentid=qs.postid ".($iscats?"AND qs.categoryid=".$cat['categoryid']." ":"").$incsql." ".$sortsql;
 				
 				$qs = qa_db_read_all_assoc(
 					qa_db_query_sub(
@@ -109,8 +105,8 @@
 					continue;
 				
 				$q2 = array();
-				foreach($qs as $q) { // dups
-					$q2[$q['postid']][] = $q;
+				foreach($qs as $q) { // group by questions
+					$q2['q'.$q['postid']][] = $q;
 				}
 
 				
@@ -129,8 +125,12 @@
 							$viewer=qa_load_viewer($q['acontent'], $q['aformat']);
 							$acontent = $viewer->get_html($q['acontent'], $q['aformat'], array());
 						}
+						
+						$a = str_replace('[answer]',$acontent,qa_opt('book_plugin_template_answer'));
+						
+						$a = str_replace('[answerer]',qa_get_user_name($q['auserid']),$a);
 
-						$as .= str_replace('[answer]',$acontent,qa_opt('book_plugin_template_answer'));
+						$as .= $a;
 						if(qa_opt('book_plugin_inc') == 1) // best answer only
 							break;
 					}
@@ -189,6 +189,31 @@
 				return 'Book Created';
 		    
 		    return 'Error creating '.qa_opt('book_plugin_loc').'; check the error log.';
+		}
+		
+		function qa_get_user_name($uid) {
+			if(QA_FINAL_EXTERNAL_USERS) {
+				$user_info = get_userdata(1);
+				if ($user_info->display_name)
+					return $user_info->display_name;
+			}
+			else {
+				$name = qa_db_read_one_value(
+					qa_db_query_sub(
+						'SELECT title AS name FROM ^userprofile '.
+						'WHERE userid=# AND title=$',
+						$uid, 'name'
+					),
+					true
+				);
+				if($name)
+					return $name;
+			}
+			
+			// default to handle, if no name
+			
+			$handles = qa_userids_to_handles(array($uid));
+			return $handles[0];
 		}
 
                         
