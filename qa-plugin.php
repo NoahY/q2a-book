@@ -192,10 +192,14 @@
 		}
 		
 		function qa_get_user_name($uid) {
+
+			$handles = qa_userids_to_handles(array($uid));
+			$handle = $handles[$uid];
+
 			if(QA_FINAL_EXTERNAL_USERS) {
 				$user_info = get_userdata(1);
 				if ($user_info->display_name)
-					return $user_info->display_name;
+					$name = $user_info->display_name;
 			}
 			else {
 				$name = qa_db_read_one_value(
@@ -206,14 +210,12 @@
 					),
 					true
 				);
-				if($name)
-					return $name;
 			}
-			
-			// default to handle, if no name
-			
-			$handles = qa_userids_to_handles(array($uid));
-			return $handles[0];
+			if(!@$name)
+				$name = $handle;
+
+			return strlen($handle) ? ('<A HREF="'.qa_path_html('user/'.$handle).
+				'" CLASS="qa-user-link'.($microformats ? ' url nickname' : '').'">'.qa_html($name).'</A>') : 'Anonymous';
 		}
 
                         
