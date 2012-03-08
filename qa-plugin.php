@@ -197,7 +197,7 @@
 			$handle = $handles[$uid];
 
 			if(QA_FINAL_EXTERNAL_USERS) {
-				$user_info = get_userdata(1);
+				$user_info = get_userdata($uid);
 				if ($user_info->display_name)
 					$name = $user_info->display_name;
 			}
