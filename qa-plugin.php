@@ -5,7 +5,7 @@
         Plugin URI: https://github.com/NoahY/q2a-book
         Plugin Update Check URI: https://github.com/NoahY/q2a-book/raw/master/qa-plugin.php
         Plugin Description: Makes boook from top questions and answers
-        Plugin Version: 0.2
+        Plugin Version: 0.3
         Plugin Date: 2012-03-05
         Plugin Author: NoahY
         Plugin Author URI:                              
@@ -62,35 +62,24 @@
 				$toc = '';
 				$qhtml = '';
 				
-				switch (qa_opt('book_plugin_sort_q')) {
-					case 0:
-						$sortsql='ORDER BY qs.netvotes DESC, qs.created DESC';
-					break;
-					
-					case 1:
-						$sortsql='ORDER BY qs.created ASC';
-					break;
-					
-				}
+				if(qa_opt('book_plugin_sort_q') == 1)
+					$sortsql='ORDER BY qs.netvotes DESC, qs.created DESC';
+				else
+					$sortsql='ORDER BY qs.created ASC';
 
-				switch (qa_opt('book_plugin_inc')) {
-					case 1:
-						$incsql='AND qs.selchildid=ans.postid';
-					break;
+				if(qa_opt('book_plugin_req_sel'))
+					$incsql .= ' AND qs.selchildid=ans.postid';
 					
-					case 2:
-						$sortsql.=', ans.netvotes DESC';
-					break;
+				if(qa_opt('book_plugin_req_abest'))
+					$sortsql.=', ans.netvotes DESC'; // get all, limit later with break
 					
-					case 3:
-						$incsql='AND qs.netvotes >= '.(int)qa_opt('book_plugin_include_votes');
-					break;
-					case 4:
-						$incsql='AND ans.netvotes >= '.(int)qa_opt('book_plugin_include_votes');
-					break;
-				}
+				if(qa_opt('book_plugin_req_qv'))
+					$incsql .= ' AND qs.netvotes >= '.(int)qa_opt('book_plugin_req_qv_no');
+
+				if(qa_opt('book_plugin_req_av'))
+					$incsql .= ' AND ans.netvotes >= '.(int)qa_opt('book_plugin_req_av_no');
 				
-				$selectspec="SELECT qs.postid AS postid, BINARY qs.title AS title, BINARY qs.content AS content, qs.format AS format, BINARY ans.content AS acontent, ans.format AS aformat, ans.userid AS auserid FROM ^posts AS qs, ^posts AS ans WHERE qs.type='Q' AND ans.type='A' AND ans.parentid=qs.postid ".($iscats?"AND qs.categoryid=".$cat['categoryid']." ":"").$incsql." ".$sortsql;
+				$selectspec="SELECT qs.postid AS postid, BINARY qs.title AS title, BINARY qs.content AS content, qs.format AS format, BINARY ans.content AS acontent, ans.format AS aformat, ans.userid AS auserid FROM ^posts AS qs, ^posts AS ans WHERE qs.type='Q' AND ans.type='A' AND ans.parentid=qs.postid".($iscats?" AND qs.categoryid=".$cat['categoryid']." ":"").$incsql." ".$sortsql;
 				
 				$qs = qa_db_read_all_assoc(
 					qa_db_query_sub(
@@ -111,7 +100,7 @@
 					
 					// toc entry
 					
-					$toc.=str_replace('[qlink]','<a href="#question'.$q['postid'].'">'.$q['title'].'</a>',qa_opt('book_plugin_template_toc'));
+					$toc.=str_replace('[qlink]','<a href="#question'.$qs[0]['postid'].'">'.$qs[0]['title'].'</a>',qa_opt('book_plugin_template_toc'));
 
 					// answer html
 					
@@ -128,7 +117,8 @@
 						$a = str_replace('[answerer]',qa_get_user_name($q['auserid']),$a);
 
 						$as .= $a;
-						if(qa_opt('book_plugin_inc') == 1) // best answer only
+						
+						if(qa_opt('book_plugin_req_abest')) // best answer only
 							break;
 					}
 					

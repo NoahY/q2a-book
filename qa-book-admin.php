@@ -8,7 +8,9 @@
 				return 0;
 			case 'book_plugin_inc':
 				return 0;
-			case 'book_plugin_include_votes':
+			case 'book_plugin_req_qv_no':
+				return 5;
+			case 'book_plugin_req_av_no':
 				return 5;
 			case 'book_plugin_loc':
 				return dirname(__FILE__).'/book.html';
@@ -55,8 +57,14 @@
 					qa_opt('book_plugin_catex',qa_post_text('book_plugin_catex'));
 					
 					qa_opt('book_plugin_sort_q',(int)qa_post_text('book_plugin_sort_q'));
-					qa_opt('book_plugin_inc',(int)qa_post_text('book_plugin_inc'));
-					qa_opt('book_plugin_include_votes',(int)qa_post_text('book_plugin_include_votes'));
+					
+					qa_opt('book_plugin_req_sel',(bool)qa_post_text('book_plugin_req_sel'));
+					qa_opt('book_plugin_req_abest',(bool)qa_post_text('book_plugin_req_abest'));
+					qa_opt('book_plugin_req_qv',(bool)qa_post_text('book_plugin_req_qv'));
+					qa_opt('book_plugin_req_av',(bool)qa_post_text('book_plugin_req_av'));
+					
+					qa_opt('book_plugin_req_qv_no',(int)qa_post_text('book_plugin_req_qv_no'));
+					qa_opt('book_plugin_req_av_no',(int)qa_post_text('book_plugin_req_av_no'));
 
 					qa_opt('book_plugin_static',(bool)qa_post_text('book_plugin_static'));
 					qa_opt('book_plugin_loc',qa_post_text('book_plugin_loc'));
@@ -117,26 +125,47 @@
 				'value' => @$sort[qa_opt('book_plugin_sort_q')],
 			);
 
-
-			$include = array(
-				'all questions and answers',
-				'questions with their selected answer',
-				'all answered questions + best answer',
-				'answered questions having minimum number of votes',
-				'questions with answers having minimum number of votes',
-			);
-			
 			$fields[] = array(
-				'id' => 'book_plugin_inc',
-				'label' => 'Include',
-				'tags' => 'onchange="if(this.selectedIndex>1) $(\'#book_plugin_include_votes\').show(); else $(\'#book_plugin_include_votes\').hide();" NAME="book_plugin_inc" ID="book_plugin_inc"',
-				'type' => 'select',
-				'options' => $include,
-				'value' => @$include[qa_opt('book_plugin_inc')],
+				'type' => 'blank',
 			);
 
 			$fields[] = array(
-				'value' => '<span id="book_plugin_include_votes" style="display:'.(qa_opt('book_plugin_inc')>1?'block':'none').'">Minimum votes: <input size="3" name="book_plugin_include_votes" value="'.qa_opt('book_plugin_include_votes').'"></span>',
+				'value' => '<b>Restrict inclusion to:</b>',
+				'type' => 'static',
+			);
+
+			$fields[] = array(
+				'label' => 'Selected answers',
+				'tags' => 'NAME="book_plugin_req_sel"',
+				'value' => qa_opt('book_plugin_req_sel'),
+				'type' => 'checkbox',
+			);
+			$fields[] = array(
+				'label' => 'Highest voted answers',
+				'tags' => 'NAME="book_plugin_req_abest"',
+				'value' => qa_opt('book_plugin_req_abest'),
+				'type' => 'checkbox',
+			);
+
+			$fields[] = array(
+				'label' => 'Questions with minimum votes',
+				'tags' => 'onclick="if(this.checked) $(\'#book_plugin_req_qv_div\').show(); else $(\'#book_plugin_req_qv_div\').hide();" NAME="book_plugin_req_qv"',
+				'value' => qa_opt('book_plugin_req_qv'),
+				'type' => 'checkbox',
+			);
+			$fields[] = array(
+				'value' => '<span id="book_plugin_req_qv_div" style="display:'.(qa_opt('book_plugin_req_qv')?'block':'none').'">min. votes for inclusion: <input name="book_plugin_req_qv_no" size="3" value="'.qa_opt('book_plugin_req_qv_no').'"></span>',
+				'type' => 'static',
+			);
+
+			$fields[] = array(
+				'label' => 'Answers with minimum votes',
+				'tags' => 'onclick="if(this.checked) $(\'#book_plugin_req_av_div\').show(); else $(\'#book_plugin_req_av_div\').hide();" NAME="book_plugin_req_av"',
+				'value' => qa_opt('book_plugin_req_av'),
+				'type' => 'checkbox',
+			);
+			$fields[] = array(
+				'value' => '<span id="book_plugin_req_av_div" style="display:'.(qa_opt('book_plugin_req_av')?'block':'none').'">min. votes for inclusion: <input name="book_plugin_req_av_no" size="3" value="'.qa_opt('book_plugin_req_av_no').'"></span>',
 				'type' => 'static',
 			);
 
