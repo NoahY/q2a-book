@@ -12,6 +12,7 @@ Features
 - fully customizable HTML template via admin/plugins
 - options for sorting and inclusion
 - option for static or on-the-fly creation (static requires PHP to write to file)
+- option to create PDF file - requires wkhtmltopdf (see below)
 
 ------------
 Installation
@@ -30,6 +31,16 @@ Installation
 .. _git: http://git-scm.com/
 .. _github:
 .. _project page: https://github.com/NoahY/q2a-book
+
+------------
+PDF File
+------------
+
+To use the PDF export, you need to put the binary of wkhtmltopdf, available here:
+
+http://code.google.com/p/wkhtmltopdf/downloads/list
+
+in the same directory as these plugin files.  It works for Linux 64-bit, no guarantees apart from that.
 
 ----------
 Disclaimer

@@ -57,6 +57,8 @@
 				
 				if (qa_clicked('book_plugin_process')) {
 			
+					qa_opt('book_plugin_active',(bool)qa_post_text('book_plugin_active'));
+					
 					qa_opt('book_plugin_cats',(bool)qa_post_text('book_plugin_cats'));
 					qa_opt('book_plugin_catex',qa_post_text('book_plugin_catex'));
 					
@@ -104,6 +106,17 @@
 			// Create the form for display
 				
 			$fields = array();
+			
+			$fields[] = array(
+				'label' => 'Activate Plugin',
+				'tags' => 'NAME="book_plugin_active"',
+				'value' => qa_opt('book_plugin_active'),
+				'type' => 'checkbox',
+			);
+
+			$fields[] = array(
+				'type' => 'blank',
+			);
 			
 			$fields[] = array(
 				'label' => 'Sort By Categories',

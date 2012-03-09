@@ -14,7 +14,9 @@
 
 		function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 		{
-			
+			if(!qa_opt('book_plugin_active'))
+				return;
+				
 			$themeobject->output('<h2>'.qa_lang('book/widget_title').'</h2>');
 			$out = '<li><a href="'.qa_path_html(qa_opt('book_plugin_request')).'">'.qa_lang('book/widget_html').'</a></li>';
 			
