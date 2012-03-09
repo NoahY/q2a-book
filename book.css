@@ -1,20 +1,17 @@
 body {
-	background-color:silver;
 }
 .page {
 	background-color:white;
-	max-width:1000px;
-	margin:auto;
 	padding:0 20px;
 }
 
 
-.toc,.question,.back { 
+.toc,.main,.category,.back { 
 	page-break-before: always; 
 }
 
 .front,.back {
-	padding:500px 0; 
+	padding:400px 0; 
 	text-align:center
 }
 .front-title {

@@ -14,8 +14,12 @@
 				return 5;
 			case 'book_plugin_loc':
 				return dirname(__FILE__).'/book.html';
+			case 'book_plugin_loc_pdf':
+				return dirname(__FILE__).'/book.pdf';
 			case 'book_plugin_request':
 				return 'book';
+			case 'book_plugin_request_pdf':
+				return 'book.pdf';
 			case 'book_plugin_css':
 				return file_get_contents(dirname(__FILE__).'/book.css');
 			case 'book_plugin_template':
@@ -67,9 +71,12 @@
 					qa_opt('book_plugin_req_av_no',(int)qa_post_text('book_plugin_req_av_no'));
 
 					qa_opt('book_plugin_static',(bool)qa_post_text('book_plugin_static'));
+					qa_opt('book_plugin_pdf',(bool)qa_post_text('book_plugin_pdf'));
 					qa_opt('book_plugin_loc',qa_post_text('book_plugin_loc'));
+					qa_opt('book_plugin_loc_pdf',qa_post_text('book_plugin_loc_pdf'));
 					
 					qa_opt('book_plugin_request',qa_post_text('book_plugin_request'));
+					qa_opt('book_plugin_request_pdf',qa_post_text('book_plugin_request_pdf'));
 					
 					qa_opt('book_plugin_css',qa_post_text('book_plugin_css'));
 					
@@ -187,12 +194,33 @@
 			$fields[] = array(
 				'type' => 'blank',
 			);
+			
+			$fields[] = array(
+				'label' => 'Create Static PDF',
+				'tags' => 'onclick="if(this.checked) $(\'#book_plugin_loc_pdf\').show(); else $(\'#book_plugin_loc_pdf\').hide();" NAME="book_plugin_pdf"',
+				'value' => qa_opt('book_plugin_pdf'),
+				'type' => 'checkbox',
+			);
+			$fields[] = array(
+				'value' => '<span id="book_plugin_loc_pdf" style="display:'.(qa_opt('book_plugin_pdf')?'block':'none').'">Location (must be writable): <input name="book_plugin_loc_pdf" value="'.qa_opt('book_plugin_loc_pdf').'"></span>',
+				'type' => 'static',
+			);
+			$fields[] = array(
+				'type' => 'blank',
+			);
 
 			$fields[] = array(
 				'label' => 'Book Permalink',
 				'note' => '<i>the url used to access the book, either via static file, or on the fly</i>',
 				'tags' => 'NAME="book_plugin_request"',
 				'value' => qa_opt('book_plugin_request'),
+			);
+
+			$fields[] = array(
+				'label' => 'Book PDF Permalink',
+				'note' => '<i>the url used to access the PDF file; should correspond with static PDF location above</i>',
+				'tags' => 'NAME="book_plugin_request_pdf"',
+				'value' => qa_opt('book_plugin_request_pdf'),
 			);
 			$fields[] = array(
 				'type' => 'blank',

@@ -25,6 +25,11 @@
 
         qa_register_plugin_overrides('qa-book-overrides.php');
 
+		qa_register_plugin_module('widget', 'qa-book-widget.php', 'qa_book_widget', 'Book Widget');
+		
+		qa_register_plugin_phrases('qa-book-lang-*.php', 'book');
+
+
 		function qa_book_plugin_createBook($return=false) {
 
 			$book = qa_opt('book_plugin_template');
@@ -172,12 +177,31 @@
 			if($return)
 				return $book;
 			
-		    if(file_put_contents(qa_opt('book_plugin_loc'),$book))
-				return 'Book Created';
+			file_put_contents(qa_opt('book_plugin_loc'),$book);
+			
+			if(qa_opt('book_plugin_pdf'))
+				qa_book_plugin_create_pdf();
+
+			return 'Book Created';
 		    
-		    return 'Error creating '.qa_opt('book_plugin_loc').'; check the error log.';
+		    //return 'Error creating '.qa_opt('book_plugin_loc').'; check the error log.';
 		}
 		
+		function qa_book_plugin_create_pdf($return=false) {
+				
+			include 'wkhtmltopdf.php';
+
+			//echo $html;
+
+			$pdf = new WKPDF();
+
+			$pdf->render_q2a();
+			
+			if($return)
+				$pdf->output(WKPDF::$PDF_DOWNLOAD,'book.pdf'); 
+			else
+				$pdf->output(WKPDF::$PDF_SAVEFILE,qa_opt('book_plugin_loc_pdf')); 
+		}
 		function qa_get_user_name($uid) {
 
 			$handles = qa_userids_to_handles(array($uid));
