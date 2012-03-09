@@ -45,8 +45,6 @@
 			
 		function admin_form(&$qa_content)
 		{					   
-					qa_error_log($_POST);
-							
 			// Process form input
 				
 				$ok = null;
