@@ -9,8 +9,9 @@ This is a plugin for **Question2Answer** that creates an html e-book of the site
 --------
 Features
 --------
-- custom options
-- makes e-book
+- fully customizable HTML template via admin/plugins
+- options for sorting and inclusion
+- option for static or on-the-fly creation (static requires PHP to write to file)
 
 ------------
 Installation
