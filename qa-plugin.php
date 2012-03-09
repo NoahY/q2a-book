@@ -5,7 +5,7 @@
         Plugin URI: https://github.com/NoahY/q2a-book
         Plugin Update Check URI: https://github.com/NoahY/q2a-book/raw/master/qa-plugin.php
         Plugin Description: Makes boook from top questions and answers
-        Plugin Version: 0.1
+        Plugin Version: 0.2
         Plugin Date: 2012-03-05
         Plugin Author: NoahY
         Plugin Author URI:                              
@@ -21,12 +21,9 @@
 
         qa_register_plugin_module('module', 'qa-book-admin.php', 'qa_book_admin', 'Book Export');
         
-        qa_register_plugin_layer('qa-book-layer.php', 'Book Layer');
+        //qa_register_plugin_layer('qa-book-layer.php', 'Book Layer');
 
-        if(function_exists('qa_register_plugin_phrases')) {
-          //  qa_register_plugin_overrides('qa-book-overrides.php');
-          // qa_register_plugin_phrases('qa-book-lang-*.php', 'book');
-        }                       
+        qa_register_plugin_overrides('qa-book-overrides.php');
 
 		function qa_book_plugin_createBook($return=false) {
 
@@ -152,7 +149,7 @@
 					$qhtml .= str_replace('[answers]',$as,$oneq);
 				}
 				if($iscats) {
-					$tocout .= '<li><a href="#cat'.$cat['categoryid'].'">'.$cat['title'].'</a><ul class="toc-ul">'.$toc.'</ul></li>';
+					$tocout .= '<li><a href="#cat'.$cat['categoryid'].'" class="toc-cat">'.$cat['title'].'</a><ul class="toc-ul">'.$toc.'</ul></li>';
 
 					// todo fix category link
 					
@@ -215,7 +212,7 @@
 				$name = $handle;
 
 			return strlen($handle) ? ('<A HREF="'.qa_path_html('user/'.$handle).
-				'" CLASS="qa-user-link'.($microformats ? ' url nickname' : '').'">'.qa_html($name).'</A>') : 'Anonymous';
+				'" CLASS="qa-user-link">'.qa_html($name).'</A>') : 'Anonymous';
 		}
 
                         

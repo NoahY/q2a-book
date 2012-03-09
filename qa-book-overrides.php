@@ -1,24 +1,15 @@
 <?php
 		
-	function qa_get_permit_options() {
-		$permits = qa_get_permit_options_base();
-		$permits[] = 'expert_question_roles';
-		return $permits;
-	}
-
-	function qa_page_q_post_rules($post, $parentpost=null, $siblingposts=null, $childposts=null) {
-		$rules = qa_page_q_post_rules_base($post, $parentpost, $siblingposts, $childposts);
-		$expert = qa_db_read_one_value(
-			qa_db_query_sub(
-				"SELECT meta_value FROM ^postmeta WHERE meta_key='is_expert_question' AND post_id=#",
-				$post['postid']
-			), true
-		);
-		if($expert){
-			$rules['commentbutton'] = true;
-			$rules['commentable'] = true;
+	function qa_get_request_content() {
+		$requestlower=strtolower(qa_request());
+		if($requestlower && $requestlower === qa_opt('book_plugin_request')) {
+			if(qa_opt('book_plugin_static'))
+				include(qa_opt('book_plugin_loc'));
+			else
+				echo qa_book_plugin_createBook(true);
+			return false;
 		}
-		return $rules;
+		return qa_get_request_content_base();
 	}
 						
 /*							  
