@@ -33,6 +33,16 @@ Installation
 .. _project page: https://github.com/NoahY/q2a-book
 
 ------------
+Static Files
+------------
+
+To output static files you need to find a location that is writeable by PHP.  The default is to write to the plugin dir itself, which is probably not writeable.  On Linux, something like this works:
+
+  touch book.html
+  touch book.pdf
+  chmod 777 book.html book.pdf
+
+------------
 PDF File
 ------------
 
