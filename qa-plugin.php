@@ -5,7 +5,7 @@
         Plugin URI: https://github.com/NoahY/q2a-book
         Plugin Update Check URI: https://github.com/NoahY/q2a-book/raw/master/qa-plugin.php
         Plugin Description: Makes boook from top questions and answers
-        Plugin Version: 0.4
+        Plugin Version: 0.5
         Plugin Date: 2012-03-05
         Plugin Author: NoahY
         Plugin Author URI:                              
@@ -39,10 +39,11 @@
 			$book = str_replace('[css]',qa_opt('book_plugin_css'),$book);
 			$book = str_replace('[front]',qa_opt('book_plugin_template_front'),$book);
 			$book = str_replace('[back]',qa_opt('book_plugin_template_back'),$book);			
-			
-			// categories
 
 			$iscats = qa_opt('book_plugin_cats');
+
+			// categories
+
 			if($iscats) {
 			    $cats = qa_db_read_all_assoc(
 					qa_db_query_sub(
@@ -55,6 +56,35 @@
 			}
 			else
 			    $cats = array(false);
+
+			// intro
+			
+			$intro = qa_lang('book/intro');
+			
+			$intro = str_replace('[sort_questions]',qa_lang('book/'.(qa_opt('book_plugin_sort_q') == 0?'sort_upvotes':'sort_date')),$intro);
+			$intro = str_replace('[sort_categories]',$iscats?qa_lang('book/sort_categories'):'',$intro);
+			$intro = str_replace('[restrict_questions]',qa_opt('book_plugin_req_qv')?qa_lang_sub('book/restrict_q_x_votes',qa_opt('book_plugin_req_qv_no')):qa_lang('book/all_questions'),$intro);
+			
+			$rq = array();
+			
+			if(qa_opt('book_plugin_req_sel'))
+				$rq[] = qa_lang('book/restrict_selected');
+			if(qa_opt('book_plugin_req_abest'))
+				$rq[] = qa_lang('book/restrict_best_a');
+			if(qa_opt('book_plugin_req_av'))
+				$rq[] = qa_lang_sub('book/restrict_a_x_votes',qa_opt('book_plugin_req_av_no'));
+
+			if(empty($rq))
+				$intro = str_replace('[restrict_answers]','',$intro);
+			else {
+				$rqs = qa_lang('book/restrict_answers_clause_'.count($rq));
+				foreach($rq as $i => $v) 
+					$rqs = str_replace('('.($i+1).')',$v,$rqs);
+				$intro = str_replace('[restrict_answers]',$rqs,$intro);
+			}
+			
+			$book = str_replace('[intro]',$intro,$book);
+
 			    
 			$tocout = '';
 			$qout = '';
@@ -67,8 +97,8 @@
 				$toc = '';
 				$qhtml = '';
 				
-				if(qa_opt('book_plugin_sort_q') == 1)
-					$sortsql='ORDER BY qs.netvotes DESC, qs.created DESC';
+				if(qa_opt('book_plugin_sort_q') == 0)
+					$sortsql='ORDER BY qs.netvotes DESC, qs.created ASC';
 				else
 					$sortsql='ORDER BY qs.created ASC';
 
@@ -172,6 +202,7 @@
 			
 			$book = str_replace('[site-title]',qa_opt('site_title'),$book);
 			$book = str_replace('[site-url]',qa_opt('site_url'),$book);
+			$book = str_replace('[date]',date('M j, Y'),$book);
 			
 			
 			if($return)

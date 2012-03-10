@@ -13,6 +13,7 @@ Features
 - options for sorting and inclusion
 - option for static or on-the-fly creation (static requires PHP to write to file)
 - option to create PDF file - requires wkhtmltopdf (see below)
+- optional widget for displaying download links in sidebar
 
 ------------
 Installation

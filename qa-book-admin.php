@@ -210,6 +210,7 @@
 			
 			$fields[] = array(
 				'label' => 'Create Static PDF',
+				'note' => '<i>requires wkhtmltopdf - see README.rst</i>',
 				'tags' => 'onclick="if(this.checked) $(\'#book_plugin_loc_pdf\').show(); else $(\'#book_plugin_loc_pdf\').hide();" NAME="book_plugin_pdf"',
 				'value' => qa_opt('book_plugin_pdf'),
 				'type' => 'checkbox',

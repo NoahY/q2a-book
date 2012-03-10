@@ -6,16 +6,21 @@ body {
 }
 
 
-.toc,.main,.category,.back { 
+.intro,.toc,.main,.category,.back { 
 	page-break-before: always; 
 }
 
-.front,.back {
+.front,.intro,.back {
 	padding:400px 0; 
 	text-align:center
 }
 .front-title {
 	font-size:300%
+}
+
+.intro {
+	margin:auto;
+	width:400px;
 }
 
 .toc {
