@@ -16,12 +16,12 @@
 		{
 			if(!qa_opt('book_plugin_active'))
 				return;
-				
+			
 			$themeobject->output('<h2>'.qa_lang('book/widget_title').'</h2>');
-			$out = '<li><a href="'.qa_path_html(qa_opt('book_plugin_request')).'">'.qa_lang('book/widget_html').'</a></li>';
+			$out = '<li><a href="'.qa_path_html(qa_opt('book_plugin_request')).'">&lt;/&gt; '.qa_lang('book/widget_html').'</a></li>';
 			
 			if(qa_opt('book_plugin_pdf'))
-				$out .= '<li><a href="'.qa_path_html(qa_opt('book_plugin_request_pdf')).'">'.qa_lang('book/widget_pdf').'</a>';
+				$out .= '<li><a href="'.qa_path_html(qa_opt('book_plugin_request_pdf')).'"><img src="http://www.adobe.com/images/pdficon_small.png"> '.qa_lang('book/widget_pdf').'</a>';
 			
 			$themeobject->output('<ul class="book-widget" style="padding-top:8px;">',$out,'</ul>');
 		}

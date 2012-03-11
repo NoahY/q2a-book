@@ -1,9 +1,9 @@
 <?php
 	
 	return array(
-		'widget_title' => 'E-Book Download',
-		'widget_html' => '<img src="html.png"> HTML',
-		'widget_pdf' => '<img src="pdf.png"> PDF',
+		'widget_title' => 'E-Book',
+		'widget_html' => 'HTML',
+		'widget_pdf' => 'PDF',
 
 		'all_questions' => 'all questions',
 		'restrict_q_x_votes' => 'questions that received at least ^ upvotes',
