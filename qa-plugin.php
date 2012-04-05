@@ -5,7 +5,7 @@
         Plugin URI: https://github.com/NoahY/q2a-book
         Plugin Update Check URI: https://github.com/NoahY/q2a-book/raw/master/qa-plugin.php
         Plugin Description: Makes boook from top questions and answers
-        Plugin Version: 0.5
+        Plugin Version: 0.6
         Plugin Date: 2012-03-05
         Plugin Author: NoahY
         Plugin Author URI:                              
