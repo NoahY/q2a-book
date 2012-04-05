@@ -12,6 +12,10 @@
 				return 5;
 			case 'book_plugin_req_av_no':
 				return 5;
+			case 'book_plugin_refresh_last':
+				return time();
+			case 'book_plugin_refresh_hours':
+				return 24;
 			case 'book_plugin_loc':
 				return dirname(__FILE__).'/book.html';
 			case 'book_plugin_loc_pdf':
@@ -76,6 +80,10 @@
 					qa_opt('book_plugin_pdf',(bool)qa_post_text('book_plugin_pdf'));
 					qa_opt('book_plugin_loc',qa_post_text('book_plugin_loc'));
 					qa_opt('book_plugin_loc_pdf',qa_post_text('book_plugin_loc_pdf'));
+
+					qa_opt('book_plugin_refresh',(bool)qa_post_text('book_plugin_refresh'));
+					qa_opt('book_plugin_refresh_hours',(int)qa_post_text('book_plugin_refresh_hours'));
+
 					
 					qa_opt('book_plugin_request',qa_post_text('book_plugin_request'));
 					qa_opt('book_plugin_request_pdf',qa_post_text('book_plugin_request_pdf'));
@@ -217,6 +225,19 @@
 			);
 			$fields[] = array(
 				'value' => '<span id="book_plugin_loc_pdf" style="display:'.(qa_opt('book_plugin_pdf')?'block':'none').'">Location (must be writable): <input name="book_plugin_loc_pdf" value="'.qa_opt('book_plugin_loc_pdf').'"></span>',
+				'type' => 'static',
+			);
+			$fields[] = array(
+				'type' => 'blank',
+			);
+			$fields[] = array(
+				'label' => 'Recreate Static Book',
+				'tags' => 'onclick="if(this.checked) $(\'#book_plugin_refresh_hours\').show(); else $(\'#book_plugin_refresh_hours\').hide();" NAME="book_plugin_refresh"',
+				'value' => qa_opt('book_plugin_refresh'),
+				'type' => 'checkbox',
+			);
+			$fields[] = array(
+				'value' => '<span id="book_plugin_refresh_hours" style="display:'.(qa_opt('book_plugin_refresh')?'block':'none').'">every&nbsp;<input name="book_plugin_refresh_hours" value="'.qa_opt('book_plugin_refresh_hours').'" size="3">&nbsp;hours</span>',
 				'type' => 'static',
 			);
 			$fields[] = array(

@@ -3,14 +3,27 @@
 		if(qa_opt('book_plugin_active')) {
 			$requestlower=strtolower(qa_request());
 			if($requestlower && $requestlower === qa_opt('book_plugin_request')) {
-				if(qa_opt('book_plugin_static'))
+				if(qa_opt('book_plugin_static')) {
+
+					// refresh
+					
+					if(qa_opt('book_plugin_refresh') && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60))
+						qa_book_plugin_createBook();
+
 					include(qa_opt('book_plugin_loc'));
+				}
 				else
 					echo qa_book_plugin_createBook(true);
 				return false;
 			}
 			else if(qa_opt('book_plugin_pdf') && $requestlower && $requestlower === qa_opt('book_plugin_request_pdf')) {
 				if(qa_opt('book_plugin_static')) {
+					
+					// refresh
+					
+					if(qa_opt('book_plugin_refresh') && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60))
+						qa_book_plugin_createBook();
+						
 					$pdf = file_get_contents(qa_opt('book_plugin_loc_pdf'));
 					header('Content-Description: File Transfer');
 					header('Cache-Control: public, must-revalidate, max-age=0'); // HTTP/1.1
