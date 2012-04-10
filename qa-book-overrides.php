@@ -7,8 +7,7 @@
 
 					// refresh
 					
-					if(qa_opt('book_plugin_refresh') && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60)) {
-						qa_opt('book_plugin_refresh_last',time());
+					if(qa_opt('book_plugin_refresh') && ((qa_opt('book_plugin_refresh_time') && (int)qa_opt('book_plugin_refresh_hours')) || (qa_get('cron') == 'true' && qa_opt('book_plugin_refresh_cron'))) && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60)) {
 						qa_book_plugin_createBook();
 					}
 
@@ -23,8 +22,7 @@
 					
 					// refresh
 					
-					if(qa_opt('book_plugin_refresh') && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60)) {
-						qa_opt('book_plugin_refresh_last',time());
+					if(qa_opt('book_plugin_refresh') && (qa_opt('book_plugin_refresh_time') && (int)qa_opt('book_plugin_refresh_hours')) && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60)) {
 						qa_book_plugin_createBook();
 					}
 						

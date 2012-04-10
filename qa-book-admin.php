@@ -59,7 +59,7 @@
 				
 				$ok = null;
 				
-				if (qa_clicked('book_plugin_process')) {
+				if (qa_clicked('book_plugin_process') || qa_clicked('book_plugin_save')) {
 			
 					qa_opt('book_plugin_active',(bool)qa_post_text('book_plugin_active'));
 					
@@ -82,6 +82,8 @@
 					qa_opt('book_plugin_loc_pdf',qa_post_text('book_plugin_loc_pdf'));
 
 					qa_opt('book_plugin_refresh',(bool)qa_post_text('book_plugin_refresh'));
+					qa_opt('book_plugin_refresh_time',(bool)qa_post_text('book_plugin_refresh_time'));
+					qa_opt('book_plugin_refresh_cron',(bool)qa_post_text('book_plugin_refresh_cron'));
 					qa_opt('book_plugin_refresh_hours',(int)qa_post_text('book_plugin_refresh_hours'));
 
 					
@@ -98,8 +100,8 @@
 					qa_opt('book_plugin_template_questions',qa_post_text('book_plugin_template_questions'));
 					qa_opt('book_plugin_template_question',qa_post_text('book_plugin_template_question'));
 					qa_opt('book_plugin_template_answer',qa_post_text('book_plugin_template_answer'));
-						
-					if(qa_opt('book_plugin_static'))
+					
+					if(qa_clicked('book_plugin_process') && qa_opt('book_plugin_static'))
 						$ok = qa_book_plugin_createBook();
 					else
 						$ok = qa_lang('admin/options_saved');
@@ -236,8 +238,11 @@
 				'value' => qa_opt('book_plugin_refresh'),
 				'type' => 'checkbox',
 			);
+			
+			$cron_url = qa_opt('site_url').qa_opt('book_plugin_request').'?cron=true';
+			
 			$fields[] = array(
-				'value' => '<span id="book_plugin_refresh_hours" style="display:'.(qa_opt('book_plugin_refresh')?'block':'none').'">every&nbsp;<input name="book_plugin_refresh_hours" value="'.qa_opt('book_plugin_refresh_hours').'" size="3">&nbsp;hours</span>',
+				'value' => '<div id="book_plugin_refresh_hours" style="display:'.(qa_opt('book_plugin_refresh')?'block':'none').'">minimum time to recreate:&nbsp;<input name="book_plugin_refresh_hours" value="'.qa_opt('book_plugin_refresh_hours').'" size="3">&nbsp;hours<br/><i>if this is set to zero, the auto-recreate will not run, and the cron url may be called at any time.<br/><br/><input type="checkbox" name="book_plugin_refresh_time" '.(qa_opt('book_plugin_refresh_time')?'checked':'').'> recreate on next access after above interval<br/><br/><input type="checkbox" name="book_plugin_refresh_cron" '.(qa_opt('book_plugin_refresh_cron')?'checked':'').'>recreate via cron url below<br/><span style="font-style:italic;">url is currently <a href="'.$cron_url.'">'.$cron_url.'</a></span></div>',
 				'type' => 'static',
 			);
 			$fields[] = array(
@@ -345,6 +350,10 @@
 				'fields' => $fields,
 			 
 				'buttons' => array(
+					array(
+						'label' => qa_lang_html('admin/save_options_button'),
+						'tags' => 'NAME="book_plugin_save"',
+					),
 					array(
 						'label' => 'Process',
 						'tags' => 'NAME="book_plugin_process"',

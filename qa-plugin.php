@@ -204,6 +204,9 @@
 			$book = str_replace('[site-url]',qa_opt('site_url'),$book);
 			$book = str_replace('[date]',date('M j, Y'),$book);
 			
+			qa_opt('book_plugin_refresh_last',time());
+			
+			error_log('Q2A Book Created on '.date('M j, Y \a\t H\:i\:s'));
 			
 			if($return)
 				return $book;
@@ -212,6 +215,7 @@
 			
 			if(qa_opt('book_plugin_pdf'))
 				qa_book_plugin_create_pdf();
+
 
 			return 'Book Created';
 		    
@@ -232,6 +236,8 @@
 				$pdf->output(WKPDF::$PDF_DOWNLOAD,'book.pdf'); 
 			else
 				$pdf->output(WKPDF::$PDF_SAVEFILE,qa_opt('book_plugin_loc_pdf')); 
+
+			error_log('Q2A PDF Book Created on '.date('M j, Y \a\t H\:i\:s'));
 		}
 		function qa_get_user_name($uid) {
 
