@@ -7,8 +7,10 @@
 
 					// refresh
 					
-					if(qa_opt('book_plugin_refresh') && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60))
+					if(qa_opt('book_plugin_refresh') && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60)) {
+						qa_opt('book_plugin_refresh_last') = time();
 						qa_book_plugin_createBook();
+					}
 
 					include(qa_opt('book_plugin_loc'));
 				}
@@ -21,8 +23,10 @@
 					
 					// refresh
 					
-					if(qa_opt('book_plugin_refresh') && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60))
+					if(qa_opt('book_plugin_refresh') && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60)) {
+						qa_opt('book_plugin_refresh_last') = time();
 						qa_book_plugin_createBook();
+					}
 						
 					$pdf = file_get_contents(qa_opt('book_plugin_loc_pdf'));
 					header('Content-Description: File Transfer');
