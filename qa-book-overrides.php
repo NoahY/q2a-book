@@ -10,12 +10,12 @@
 					if(qa_opt('book_plugin_refresh') && ((qa_opt('book_plugin_refresh_time') && (int)qa_opt('book_plugin_refresh_hours')) || (qa_get('cron') == 'true' && qa_opt('book_plugin_refresh_cron'))) && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60)) {
 						qa_book_plugin_createBook();
 						if(qa_get('cron') == 'true') {
-							echo 'true';
+							echo 'true\n';
 							return false;
 						}
 					}
 					else if (qa_get('cron') == 'true') {
-						echo 'false';
+						echo 'false\n';
 						return false;
 					}
 
