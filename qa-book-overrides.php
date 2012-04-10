@@ -8,7 +8,7 @@
 					// refresh
 					
 					if(qa_opt('book_plugin_refresh') && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60)) {
-						qa_opt('book_plugin_refresh_last') = time();
+						qa_opt('book_plugin_refresh_last',time());
 						qa_book_plugin_createBook();
 					}
 
@@ -24,7 +24,7 @@
 					// refresh
 					
 					if(qa_opt('book_plugin_refresh') && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60)) {
-						qa_opt('book_plugin_refresh_last') = time();
+						qa_opt('book_plugin_refresh_last',time());
 						qa_book_plugin_createBook();
 					}
 						
