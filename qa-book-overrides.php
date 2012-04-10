@@ -7,7 +7,7 @@
 
 					// refresh
 					
-					if(qa_opt('book_plugin_refresh') && ((qa_opt('book_plugin_refresh_time') && (int)qa_opt('book_plugin_refresh_hours')) || (qa_get('cron') == 'true' && $_SERVER['SERVER_ADDR'] == $_SERVER['REMOTE_ADDR'] && qa_opt('book_plugin_refresh_cron'))) && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60)) {
+					if(qa_opt('book_plugin_refresh') && ((qa_opt('book_plugin_refresh_time') && (int)qa_opt('book_plugin_refresh_hours')) || (qa_get('cron') == 'true' && qa_opt('book_plugin_refresh_cron'))) && time() > qa_opt('book_plugin_refresh_last')+(qa_opt('book_plugin_refresh_hours')*60*60)) {
 						qa_book_plugin_createBook();
 						if(qa_get('cron') == 'true') {
 							echo "true\n";
@@ -15,9 +15,7 @@
 						}
 					}
 					else if (qa_get('cron') == 'true') {
-						if($_SERVER['SERVER_ADDR'] != $_SERVER['REMOTE_ADDR'])
-							error_log('Q2A Book Recreate Error: remote cron request');
-						else if(!qa_opt('book_plugin_refresh_cron'))
+						if(!qa_opt('book_plugin_refresh_cron'))
 							error_log('Q2A Book Recreate Error: cron request not allowed via admin/plugins');
 						else
 							error_log('Q2A Book Recreate Error: cron request before minimum time elapsed');
