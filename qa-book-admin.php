@@ -70,6 +70,7 @@
 					
 					qa_opt('book_plugin_req_sel',(bool)qa_post_text('book_plugin_req_sel'));
 					qa_opt('book_plugin_req_abest',(bool)qa_post_text('book_plugin_req_abest'));
+					qa_opt('book_plugin_req_abest_max',(int)qa_post_text('book_plugin_req_abest_max'));
 					qa_opt('book_plugin_req_qv',(bool)qa_post_text('book_plugin_req_qv'));
 					qa_opt('book_plugin_req_av',(bool)qa_post_text('book_plugin_req_av'));
 					
@@ -170,13 +171,18 @@
 				'value' => qa_opt('book_plugin_req_sel'),
 				'type' => 'checkbox',
 			);
+
 			$fields[] = array(
 				'label' => 'Highest voted answers',
-				'tags' => 'NAME="book_plugin_req_abest"',
+				'tags' => 'onclick="if(this.checked) $(\'#book_plugin_req_abest_max_div\').show(); else $(\'#book_plugin_req_abest_max_div\').hide();" NAME="book_plugin_req_abest"',
 				'value' => qa_opt('book_plugin_req_abest'),
 				'type' => 'checkbox',
 			);
-
+			$fields[] = array(
+				'value' => '<span id="book_plugin_req_abest_max_div" style="display:'.(qa_opt('book_plugin_req_abest')?'block':'none').'">max number of answers to include: <input name="book_plugin_req_abest_max" size="3" value="'.(qa_opt('book_plugin_req_abest_max')?qa_opt('book_plugin_req_abest_max'):'').'"></span>',
+				'type' => 'static',
+			);
+			
 			$fields[] = array(
 				'label' => 'Questions with minimum votes',
 				'tags' => 'onclick="if(this.checked) $(\'#book_plugin_req_qv_div\').show(); else $(\'#book_plugin_req_qv_div\').hide();" NAME="book_plugin_req_qv"',

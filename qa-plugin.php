@@ -5,7 +5,7 @@
         Plugin URI: https://github.com/NoahY/q2a-book
         Plugin Update Check URI: https://github.com/NoahY/q2a-book/raw/master/qa-plugin.php
         Plugin Description: Makes boook from top questions and answers
-        Plugin Version: 0.6
+        Plugin Version: 0.7
         Plugin Date: 2012-03-05
         Plugin Author: NoahY
         Plugin Author URI:                              
@@ -114,7 +114,7 @@
 				if(qa_opt('book_plugin_req_av'))
 					$incsql .= ' AND ans.netvotes >= '.(int)qa_opt('book_plugin_req_av_no');
 				
-				$selectspec="SELECT qs.postid AS postid, BINARY qs.title AS title, BINARY qs.content AS content, qs.format AS format, BINARY ans.content AS acontent, ans.format AS aformat, ans.userid AS auserid FROM ^posts AS qs, ^posts AS ans WHERE qs.type='Q' AND ans.type='A' AND ans.parentid=qs.postid".($iscats?" AND qs.categoryid=".$cat['categoryid']." ":"").$incsql." ".$sortsql;
+				$selectspec="SELECT qs.postid AS postid, BINARY qs.title AS title, BINARY qs.content AS content, qs.format AS format, qs.netvotes AS netvotes, BINARY ans.content AS acontent, ans.format AS aformat, ans.userid AS auserid, ans.netvotes AS anetvotes FROM ^posts AS qs, ^posts AS ans WHERE qs.type='Q' AND ans.type='A' AND ans.parentid=qs.postid".($iscats?" AND qs.categoryid=".$cat['categoryid']." ":"").$incsql." ".$sortsql;
 				
 				$qs = qa_db_read_all_assoc(
 					qa_db_query_sub(
@@ -140,7 +140,12 @@
 					// answer html
 					
 					$as = '';
-					foreach($qs as $q) {
+					$nv = false;
+					foreach($qs as $idx => $q) {
+						if(qa_opt('book_plugin_req_abest') && qa_opt('book_plugin_req_abest_max') && $idx >= qa_opt('book_plugin_req_abest_max'))
+							break;
+						if($nv !== false && qa_opt('book_plugin_req_abest') && $nv != $q['anetvotes']) // best answers only
+							break;
 						$acontent = '';
 						if(!empty($q['acontent'])) {
 							$viewer=qa_load_viewer($q['acontent'], $q['aformat']);
@@ -153,8 +158,7 @@
 
 						$as .= $a;
 						
-						if(qa_opt('book_plugin_req_abest')) // best answer only
-							break;
+						$nv = $q['anetvotes'];
 					}
 					
 					// question html
