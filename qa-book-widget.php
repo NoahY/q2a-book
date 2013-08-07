@@ -18,12 +18,12 @@
 				return;
 			
 			$themeobject->output('<h2>'.qa_lang('book/widget_title').'</h2>');
-			$out = '<li><a href="'.qa_path_html(qa_opt('book_plugin_request')).'">&lt;/&gt; '.qa_lang('book/widget_html').'</a></li>';
+			$out = '<p><a href="'.qa_path_html(qa_opt('book_plugin_request')).'">&lt;/&gt; '.qa_lang('book/widget_html').'</a></p>';
 			
 			if(qa_opt('book_plugin_pdf'))
-				$out .= '<li><a href="'.qa_path_html(qa_opt('book_plugin_request_pdf')).'"><img src="http://www.adobe.com/images/pdficon_small.png"> '.qa_lang('book/widget_pdf').'</a>';
+				$out .= '<p><a href="'.qa_path_html(qa_opt('book_plugin_request_pdf')).'"><img src="http://www.adobe.com/images/pdficon_small.png"> '.qa_lang('book/widget_pdf').'</a></p>';
 			
-			$themeobject->output('<ul class="book-widget" style="padding-top:8px;">',$out,'</ul>');
+			$themeobject->output('div class="book-widget" style="padding-top:8px;">',$out,'</div>');
 		}
 	};
 
