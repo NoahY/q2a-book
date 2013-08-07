@@ -23,7 +23,7 @@
 			if(qa_opt('book_plugin_pdf'))
 				$out .= '<p><a href="'.qa_path_html(qa_opt('book_plugin_request_pdf')).'"><img src="http://www.adobe.com/images/pdficon_small.png"> '.qa_lang('book/widget_pdf').'</a></p>';
 			
-			$themeobject->output('div class="book-widget" style="padding-top:0px">',$out,'</div>');
+			$themeobject->output('<div class="book-widget" style="padding-top:0px">',$out,'</div>');
 		}
 	};
 
